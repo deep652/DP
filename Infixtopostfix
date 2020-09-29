@@ -1,0 +1,80 @@
+#include <iostream>
+#include<stack>
+
+using namespace std;
+void infixtopostfix(string);
+int prec(char);
+
+int main() {
+	string str="a+b*(c^d-e)^(f+g*h)-i";
+	infixtopostfix(str);
+	return 0;
+}
+
+int prec(char ch)
+{
+    if(ch=='^')
+        return 3;
+    else if(ch=='*' || ch=='/')
+        return 2;
+    else if(ch=='+' || ch=='-')
+        return 1;
+    else 
+	return -1;
+        
+}
+
+void infixtopostfix(string str)
+{
+    stack<char> opstack;
+	opstack.push('N');
+    char ch;
+    string postfixexpr;
+    int l=str.length();
+    
+    for(int i=0;i<l;i++)
+    {
+       // ch=str.at(i);
+        if((str[i]>='a' && str[i]<='z' )||(str[i]>='A' && str[i]<='Z'))
+        {
+         postfixexpr+=str[i];   
+        }
+        else if(str[i]='(')
+        {
+            opstack.push('(');
+        }
+        else if(str[i] == ')')
+        {
+            while(opstack.top()!='N' && opstack.top()!='(')
+            {
+                char c=opstack.top();
+				opstack.pop();
+                postfixexpr+=c;  
+            }
+            if(opstack.top()=='(')
+            {
+				char c = st.top(); 
+                opstack.pop();
+            }
+        }
+        else 
+        {
+            while(opstack.top()!='N' && prec(str[i])<=prec(opstack.top()))
+            {
+                char c=opstack.top();
+				opstack.pop();
+                postfixexpr+=c;
+            }
+            opstack.push(str[i]);
+        }
+    }
+    
+    while(opstack.top()!='N')
+    {
+        char c=opstack.top();
+        postfixexpr+=c;
+        opstack.pop();
+    }
+    
+    cout<<postfixexpr<<endl;
+}
